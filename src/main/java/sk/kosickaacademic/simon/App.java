@@ -1,13 +1,12 @@
 package sk.kosickaacademic.simon;
 
-/**
- * Hello world!
- *
- */
+import sk.kosickaacademic.simon.database.Database;
+
 public class App 
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        Database db = new Database();
+        db.getConnection();
     }
 }
