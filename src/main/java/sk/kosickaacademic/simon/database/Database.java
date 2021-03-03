@@ -4,10 +4,8 @@ import sk.kosickaacademic.simon.Log;
 import sk.kosickaacademic.simon.entity.User;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class Database {
@@ -59,5 +57,52 @@ public class Database {
             log.printError(e.toString());
         }
         return false;
+    }
+
+    private ArrayList<User> executeSelect(PreparedStatement ps) throws SQLException{
+        ArrayList<User> list = new ArrayList<>();
+        ResultSet rs = ps.executeQuery();
+        int count = 0;
+        while(rs.next()){
+            int id = rs.getInt("id");
+            String fName = rs.getString("fname");
+            String lName = rs.getString("lname");
+            int age = rs.getInt("age");
+            int gender = rs.getInt("gender");
+            list.add(new User(id, age, fName, lName, gender));
+            count++;
+        }
+        log.printMessage("Number of records - " +count);
+        return list;
+    }
+
+    public ArrayList<User> getMales(){
+        ArrayList<User> list = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE gender = 0";
+        try(Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            return executeSelect(ps);
+        }catch (SQLException e){
+            log.printError(e.toString());
+        }
+        return null;
+    }
+
+    public ArrayList<User> getFemales(){
+        ArrayList<User> list = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE gender = 1";
+        try(Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            return executeSelect(ps);
+        }catch (SQLException e){
+            log.printError(e.toString());
+        }
+        return null;
+    }
+
+    public ArrayList<User> getUsersByAge(int from, int to){
+        ArrayList<User> list = new ArrayList<>();
+
+        return list;
     }
 }
