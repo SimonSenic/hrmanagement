@@ -52,7 +52,7 @@ public class Database {
                     return true;
                 }
             }
-            con.close();
+            closeConnection(con);
         }catch (SQLException e){
             log.printError(e.toString());
         }
@@ -101,8 +101,62 @@ public class Database {
     }
 
     public ArrayList<User> getUsersByAge(int from, int to){
-        ArrayList<User> list = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE age>=? AND age<=?";
+        if(to<from) return null;
+        try(Connection con = getConnection()){
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, from);
+            ps.setInt(2, to);
+            return executeSelect(ps);
+        }catch (SQLException e){
+            log.printError(e.toString());
+        }
+        return null;
+    }
 
-        return list;
+    public ArrayList<User> getAllUsers(){
+        String query = "SELECT * FROM user";
+        try(Connection con = getConnection()){
+            PreparedStatement ps = con.prepareStatement(query);
+            return executeSelect(ps);
+        }catch (SQLException e){
+            log.printError(e.toString());
+        }
+        return null;
+    }
+
+    public ArrayList<User> getUserByID(int id){
+        String query = "SELECT * FROM user WHERE id=?";
+        try(Connection con = getConnection()){
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, id);
+            return executeSelect(ps);
+        }catch (SQLException e){
+            log.printError(e.toString());
+        }
+        return null;
+    }
+
+    public ArrayList<User> getUser(String pattern){
+        String query = "SELECT * FROM user WHERE ";
+
+        return null;
+    }
+
+    public boolean changeAge(int id, int newAge){
+        String query = "UPDATE user SET age=? WHERE id=?";
+        try(Connection con = getConnection()){
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, newAge);
+            ps.setInt(2, id);
+            int result = ps.executeUpdate();
+            if(result==1){
+                log.printMessage("Successfully changed age");
+                return true;
+            }
+        }catch (SQLException e){
+            log.printError(e.toString());
+        }
+        return false;
     }
 }

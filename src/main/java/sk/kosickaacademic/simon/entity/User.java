@@ -38,4 +38,9 @@ public class User {
     public Gender getGender() {
         return gender;
     }
+
+    @Override
+    public String toString(){
+        return "[ID: " +id +"] " +fName +" " +lName +", Gender: " +gender +", Age: " +age;
+    }
 }
