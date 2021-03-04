@@ -15,7 +15,7 @@ public class App
         //db.getUsersByAge(50, 100);
         //db.changeAge(3, 86);
 
-        ArrayList<User> list = db.getUserByID(3);
+        ArrayList<User> list = db.getUser("Meky");
         for(User temp : list) System.out.println(temp.toString());
     }
 }

@@ -138,8 +138,15 @@ public class Database {
     }
 
     public ArrayList<User> getUser(String pattern){
-        String query = "SELECT * FROM user WHERE ";
-
+        String query = "SELECT * FROM user WHERE fname LIKE '%'?'%' OR lname LIKE '%'?'%' ";
+        try(Connection con = getConnection()){
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, pattern);
+            ps.setString(2, pattern);
+            return executeSelect(ps);
+        }catch (SQLException e){
+            log.printError(e.toString());
+        }
         return null;
     }
 
