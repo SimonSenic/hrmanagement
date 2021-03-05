@@ -1,6 +1,7 @@
 package sk.kosickaacademic.simon.database;
 
 import sk.kosickaacademic.simon.Log;
+import sk.kosickaacademic.simon.Util;
 import sk.kosickaacademic.simon.entity.User;
 
 import java.io.InputStream;
@@ -42,8 +43,8 @@ public class Database {
             Connection con = getConnection();
             if(con!=null){
                 PreparedStatement ps = con.prepareStatement(query);
-                ps.setString(1, user.getFirstName());
-                ps.setString(2, user.getLastName());
+                ps.setString(1, new Util().normalizeName(user.getFirstName()));
+                ps.setString(2, new Util().normalizeName(user.getLastName()));
                 ps.setInt(3, user.getAge());
                 ps.setInt(4, user.getGender().getValue());
                 int result = ps.executeUpdate();
