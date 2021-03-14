@@ -1,7 +1,7 @@
 package sk.kosickaacademic.simon;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import sk.kosickaacademic.simon.entity.User;
 
 import java.text.DateFormat;
@@ -23,7 +23,7 @@ public class Util {
             userObject.put("lName", temp.getLastName());
             userObject.put("gender", temp.getGender());
             userObject.put("age", temp.getAge());
-            array.put(userObject);
+            array.add(userObject);
         }
         object.put("users", array);
         return object.toString();
@@ -41,7 +41,7 @@ public class Util {
         userObject.put("lName", user.getLastName());
         userObject.put("gender", user.getGender());
         userObject.put("age", user.getAge());
-        array.put(userObject);
+        array.add(userObject);
         object.put("users", array);
         return object.toString();
     }

@@ -2,11 +2,13 @@ package sk.kosickaacademic.simon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import sk.kosickaacademic.simon.database.Database;
 import sk.kosickaacademic.simon.entity.User;
 
 import java.util.ArrayList;
 
+@ComponentScan(basePackages = "sk.kosickaacademic.simon.controller")
 @SpringBootApplication
 public class App 
 {
