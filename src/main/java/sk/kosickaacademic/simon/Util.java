@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class Util {
     public String getJSON(ArrayList<User> list){
-        if(list.isEmpty()) return "{}";
+        if(list.isEmpty() || list==null) return "{}";
         JSONObject object = new JSONObject();
         object.put("datetime", getCurrentTime());
         object.put("size", list.size());

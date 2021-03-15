@@ -1,6 +1,5 @@
 package sk.kosickaacademic.simon.controller;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 
 @RestController
 public class Controller {
-    @PostMapping("/user/new")
+    @PostMapping("/user/add")
     public ResponseEntity<String> insertNewUser(@RequestBody String data){
         try{
             JSONObject object = (JSONObject) new JSONParser().parse(data);
@@ -66,18 +65,19 @@ public class Controller {
         return null;
     }
 
-    @GetMapping("/users/males")
-    public ResponseEntity<String> getMales(){
-        ArrayList<User> list = new Database().getMales();
-        String json = new Util().getJSON(list);
-        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
-    }
-
-    @GetMapping("/users/females")
-    public ResponseEntity<String> getFemales(){
-        ArrayList<User> list = new Database().getFemales();
-        String json = new Util().getJSON(list);
-        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
+    @GetMapping("/users/gender")
+    public ResponseEntity<String> getUsersByGender(@RequestParam(value = "gender") String gender){
+        if(gender.equalsIgnoreCase("male")){
+            ArrayList<User> list = new Database().getMales();
+            String json = new Util().getJSON(list);
+            return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
+        }
+        else if(gender.equalsIgnoreCase("female")) {
+            ArrayList<User> list = new Database().getFemales();
+            String json = new Util().getJSON(list);
+            return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
+        }
+        return null;
     }
 
     @GetMapping("/users")
@@ -88,23 +88,15 @@ public class Controller {
     }
 
     @GetMapping("/users/age")
-    public ResponseEntity<String> getUsersByAge(@RequestBody String data){
-        try{
-            JSONObject object = (JSONObject) new JSONParser().parse(data);
-            int from = Integer.parseInt(String.valueOf(object.get("from")));
-            int to = Integer.parseInt(String.valueOf(object.get("to")));
-            if(from<0 || to<0 || from>to){
-                JSONObject objError = new JSONObject();
-                objError.put("error", "Invalid entry");
-                return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(objError.toJSONString());
-            }
-            ArrayList<User> list = new Database().getUsersByAge(from, to);
-            String json = new Util().getJSON(list);
-            return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
-        }catch (ParseException e){
-            e.printStackTrace();
+    public ResponseEntity<String> getUsersByAge(@RequestParam(value = "from") int from, @RequestParam(value = "to") int to){
+        if(from<0 || from>to){
+            JSONObject objError = new JSONObject();
+            objError.put("error", "Invalid entry");
+            return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(objError.toJSONString());
         }
-        return null;
+        ArrayList<User> list = new Database().getUsersByAge(from, to);
+        String json = new Util().getJSON(list);
+        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
     }
 
     @GetMapping("/user/id/{id}")
