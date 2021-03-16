@@ -2,6 +2,7 @@ package sk.kosickaacademic.simon;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import sk.kosickaacademic.simon.database.Database;
 import sk.kosickaacademic.simon.entity.User;
 
 import java.text.DateFormat;
@@ -55,5 +56,31 @@ public class Util {
     public String normalizeName(String name){
         if(name==null || name.equals("")) return null;
         return Character.toString(name.charAt(0)).toUpperCase() + name.substring(1).toLowerCase();
+    }
+
+    public String getOverview(ArrayList<User> list){
+        if(list.isEmpty() || list==null) return "{}";
+        JSONObject object = new JSONObject();
+        Database db = new Database();
+        object.put("records", list.size());
+        object.put("males", db.getMales().size());
+        object.put("females", db.getFemales().size());
+
+        int minAge=list.get(0).getAge();
+        int maxAge=list.get(0).getAge();
+        int avgAge=0;
+        for(int i=1; i<list.size(); i++){
+            if(minAge>list.get(i).getAge())
+                minAge = list.get(i).getAge();
+            if(maxAge<list.get(i).getAge())
+                maxAge = list.get(i).getAge();
+            avgAge+=list.get(i).getAge();
+        }
+        avgAge=avgAge/list.size();
+        object.put("minAge", minAge);
+        object.put("maxAge", maxAge);
+        object.put("avgAge", avgAge);
+
+        return object.toString();
     }
 }

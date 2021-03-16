@@ -57,7 +57,7 @@ public class Controller {
             if(new Database().changeAge(id, newAge)){
                 JSONObject objMessage = new JSONObject();
                 objMessage.put("server", "Age changed successfully");
-                return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(objMessage.toJSONString());
+                return ResponseEntity.status(204).contentType(MediaType.APPLICATION_JSON).body(objMessage.toJSONString());
             }
         }catch (ParseException e){
             e.printStackTrace();
@@ -110,6 +110,13 @@ public class Controller {
     public ResponseEntity<String> getUser(@PathVariable String pattern){
         ArrayList<User> list = new Database().getUser(pattern);
         String json = new Util().getJSON(list);
+        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<String> getOverviewData(){
+        ArrayList<User> list = new Database().getAllUsers();
+        String json = new Util().getOverview(list);
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
     }
 }
