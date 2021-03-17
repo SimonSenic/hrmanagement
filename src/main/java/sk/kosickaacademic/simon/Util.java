@@ -61,15 +61,17 @@ public class Util {
     public String getOverview(ArrayList<User> list){
         if(list.isEmpty() || list==null) return "{}";
         JSONObject object = new JSONObject();
-        Database db = new Database();
         object.put("records", list.size());
-        object.put("males", db.getMales().size());
-        object.put("females", db.getFemales().size());
-
+        int countMales=0;
+        int countFemales=0;
         int minAge=list.get(0).getAge();
         int maxAge=list.get(0).getAge();
         int avgAge=0;
         for(int i=1; i<list.size(); i++){
+            if(list.get(i).getGender().getValue()==0)
+                countMales++;
+            if(list.get(i).getGender().getValue()==1)
+                countFemales++;
             if(minAge>list.get(i).getAge())
                 minAge = list.get(i).getAge();
             if(maxAge<list.get(i).getAge())
@@ -77,10 +79,11 @@ public class Util {
             avgAge+=list.get(i).getAge();
         }
         avgAge=avgAge/list.size();
+        object.put("males", countMales);
+        object.put("females", countFemales);
         object.put("minAge", minAge);
         object.put("maxAge", maxAge);
         object.put("avgAge", avgAge);
-
         return object.toString();
     }
 }
