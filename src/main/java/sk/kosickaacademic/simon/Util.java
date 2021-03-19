@@ -2,13 +2,13 @@ package sk.kosickaacademic.simon;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import sk.kosickaacademic.simon.database.Database;
 import sk.kosickaacademic.simon.entity.User;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 public class Util {
     public String getJSON(ArrayList<User> list){
@@ -85,5 +85,17 @@ public class Util {
         object.put("maxAge", maxAge);
         object.put("avgAge", avgAge);
         return object.toString();
+    }
+
+    public String getToken(){
+        String token="";
+        Random rnd = new Random();
+        for(int i=0; i<40; i++){
+            int a = rnd.nextInt(3);
+            if(a==0) token+=(char) (rnd.nextInt(26)+65);
+            else if(a==1) token+=(char) (rnd.nextInt(26)+97);
+            else token+=(char) (rnd.nextInt(10)+48);
+        }
+        return token;
     }
 }
