@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div>
+        <form method="GET">
+            <table>
+                <tr>
+                    <td>First Name:</td>
+                    <td><input type="text" id="fName" required /></td>
+                </tr>
+                <tr>
+                    <td>Last Name:</td>
+                    <td><input type="text" id="lName" required /></td>
+                </tr>
+                <tr>
+                    <td>Age:</td>
+                    <td><input type="number" id="age" min="0" required /></td>
+                </tr>
+                <tr>
+                    <td>Gender:</td>
+                    <td>
+                        <select id="gender">
+                            <option value="m">male</option>
+                            <option value="f">female</option>
+                            <option value="o">other</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="button" value="add" onclick="add()"></td>
+                    <td><input type="reset" value="reset"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+<style>
+    div{
+        margin-left: 45%;
+        margin-top: 20%;
+    }
+</style>
+<script type="text/javascript">
+    function add() {
+        const fName = document.getElementById('fName').value;
+        const lName = document.getElementById('lName').value;
+        const age = parseInt(document.getElementById('age').value);
+        const gender = document.getElementById('gender').value;
+        const obj = { fName: fName, lName: lName, age: age, gender: gender }
+        const json = JSON.stringify(obj);
+        fetch('http://localhost:8080/user/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            mode: 'no-cors',
+            body: json
+        })
+        .catch(error => console.error(error))
+    }
+</script>
+</html>
