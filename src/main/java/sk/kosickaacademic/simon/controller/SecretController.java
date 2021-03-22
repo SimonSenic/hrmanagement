@@ -58,4 +58,21 @@ public class SecretController {
         }
         return null;
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logOut(@RequestHeader("token") String data){
+        String token = data.substring(7);
+        for(Map.Entry<String, String> temp : map.entrySet())
+            if(temp.getValue().equals(token)){
+                map.remove(temp.getKey());
+                log.printMessage("Successfully logged out");
+                JSONObject json = new JSONObject();
+                json.put("server", "Successfully logged out");
+                return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json.toJSONString());
+            }
+        log.printError("Invalid token");
+        JSONObject json = new JSONObject();
+        json.put("error", "Invalid token");
+        return ResponseEntity.status(401).contentType(MediaType.APPLICATION_JSON).body(json.toJSONString());
+    }
 }
