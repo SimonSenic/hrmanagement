@@ -8,7 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sk.kosickaacademic.simon.Log;
 import sk.kosickaacademic.simon.Util;
+import sk.kosickaacademic.simon.database.Database;
+import sk.kosickaacademic.simon.entity.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,5 +77,26 @@ public class SecretController {
         JSONObject json = new JSONObject();
         json.put("error", "Invalid token");
         return ResponseEntity.status(401).contentType(MediaType.APPLICATION_JSON).body(json.toJSONString());
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<String> findUserByID(@RequestHeader("token") String data, @RequestHeader("id") int id){
+        if(data==null || data.equals("") || id<=0){
+            JSONObject json = new JSONObject();
+            json.put("error", "Invalid header");
+            return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(json.toJSONString());
+        }
+        String token = data.substring(7);
+        for(Map.Entry<String, String> temp : map.entrySet())
+            if(temp.getValue().equals(token)){
+                ArrayList<User> list = new Database().getUserByID(id);
+                String json = new Util().getJSON(list);
+                log.printMessage("a");
+                return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
+            }
+        ArrayList<User> list = new Database().getAllUsers();
+        String json = new Util().getJSON(list);
+        log.printMessage("b");
+        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
     }
 }
