@@ -1,5 +1,6 @@
 package sk.kosickaacademic.simon.controller;
 
+import org.json.XML;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -81,9 +82,13 @@ public class Controller {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<String> getAllUsers(){
+    public ResponseEntity<String> getAllUsers(@RequestParam(value = "type") String type){
         ArrayList<User> list = new Database().getAllUsers();
         String json = new Util().getJSON(list);
+        if(type.equals("xml")){
+            String xml = XML.toString(json);
+            return ResponseEntity.status(200).contentType(MediaType.APPLICATION_XML).body(xml);
+        }
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
     }
 
