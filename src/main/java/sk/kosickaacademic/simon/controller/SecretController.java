@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sk.kosickaacademic.simon.Log;
+import sk.kosickaacademic.simon.Login;
 import sk.kosickaacademic.simon.Util;
 import sk.kosickaacademic.simon.database.Database;
 import sk.kosickaacademic.simon.entity.User;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 @RestController
 public class SecretController {
-    public final String password = "Kosice2021!";
+    public static final String password = "Kosice2021!";
     Map<String, String> map = new HashMap<>();
     Log log = new Log();
 
@@ -40,6 +41,11 @@ public class SecretController {
                 log.printError("Empty login or password");
                 JSONObject json = new JSONObject();
                 json.put("error", "Empty login or password");
+                return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(json.toJSONString());
+            }
+            if(!new Login().loginUser(login, password)){
+                JSONObject json = new JSONObject();
+                json.put("error", "Blocked access, too many attempts");
                 return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(json.toJSONString());
             }
             if(password.equals(this.password)){
