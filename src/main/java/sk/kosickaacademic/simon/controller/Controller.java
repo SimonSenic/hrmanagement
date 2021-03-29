@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sk.kosickaacademic.simon.Gender;
 import sk.kosickaacademic.simon.Util;
+import sk.kosickaacademic.simon.database.DatabaseMongo;
 import sk.kosickaacademic.simon.database.DatabaseMySQL;
 import sk.kosickaacademic.simon.entity.User;
 
@@ -33,7 +34,8 @@ public class Controller {
             if(gender.equalsIgnoreCase("male")) g=Gender.MALE;
             else if (gender.equalsIgnoreCase("female")) g=Gender.FEMALE;
             else g=Gender.OTHER;
-            if(new DatabaseMySQL().insertNewUser(new User(age, fName, lName, g.getValue()))){
+            if(new DatabaseMySQL().insertNewUser(new User(age, fName, lName, g.getValue()))
+                    && new DatabaseMongo().insertNewUser(new User(age, fName, lName, g.getValue()))){
                 JSONObject objMessage = new JSONObject();
                 objMessage.put("server", "User added successfully");
                 return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(objMessage.toJSONString());

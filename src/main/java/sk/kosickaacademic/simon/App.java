@@ -23,7 +23,8 @@ public class App
         //for(User temp : list) System.out.println(temp);
 
         DatabaseMongo db2 = new DatabaseMongo();
-        //db2.insertNewUser(new User(40, "Donald", "Trump", 0));
+        //db2.insertNewUser(new User(53, "Joe", "Bidden", 0));
+        //System.out.println(db2.getAllUsers());
 
         SpringApplication.run(App.class, args);
     }
