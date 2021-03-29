@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sk.kosickaacademic.simon.Gender;
 import sk.kosickaacademic.simon.Util;
-import sk.kosickaacademic.simon.database.Database;
+import sk.kosickaacademic.simon.database.DatabaseMySQL;
 import sk.kosickaacademic.simon.entity.User;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class Controller {
             if(gender.equalsIgnoreCase("male")) g=Gender.MALE;
             else if (gender.equalsIgnoreCase("female")) g=Gender.FEMALE;
             else g=Gender.OTHER;
-            if(new Database().insertNewUser(new User(age, fName, lName, g.getValue()))){
+            if(new DatabaseMySQL().insertNewUser(new User(age, fName, lName, g.getValue()))){
                 JSONObject objMessage = new JSONObject();
                 objMessage.put("server", "User added successfully");
                 return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(objMessage.toJSONString());
@@ -55,7 +55,7 @@ public class Controller {
                 objError.put("error", "Invalid entry");
                 return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(objError.toJSONString());
             }
-            if(new Database().changeAge(id, newAge)){
+            if(new DatabaseMySQL().changeAge(id, newAge)){
                 JSONObject objMessage = new JSONObject();
                 objMessage.put("server", "Age changed successfully");
                 return ResponseEntity.status(204).contentType(MediaType.APPLICATION_JSON).body(objMessage.toJSONString());
@@ -69,12 +69,12 @@ public class Controller {
     @GetMapping("/users/gender")
     public ResponseEntity<String> getUsersByGender(@RequestParam(value = "gender") String gender){
         if(gender.equalsIgnoreCase("male")){
-            ArrayList<User> list = new Database().getMales();
+            ArrayList<User> list = new DatabaseMySQL().getMales();
             String json = new Util().getJSON(list);
             return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
         }
         else if(gender.equalsIgnoreCase("female")) {
-            ArrayList<User> list = new Database().getFemales();
+            ArrayList<User> list = new DatabaseMySQL().getFemales();
             String json = new Util().getJSON(list);
             return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
         }
@@ -83,7 +83,7 @@ public class Controller {
 
     @GetMapping("/users")
     public ResponseEntity<String> getAllUsers(@RequestParam(value = "type") String type){
-        ArrayList<User> list = new Database().getAllUsers();
+        ArrayList<User> list = new DatabaseMySQL().getAllUsers();
         String json = new Util().getJSON(list);
         if(type.equals("xml")){
             String xml = XML.toString(json);
@@ -99,28 +99,28 @@ public class Controller {
             objError.put("error", "Invalid entry");
             return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(objError.toJSONString());
         }
-        ArrayList<User> list = new Database().getUsersByAge(from, to);
+        ArrayList<User> list = new DatabaseMySQL().getUsersByAge(from, to);
         String json = new Util().getJSON(list);
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
     }
 
     @GetMapping("/user/id/{id}")
     public ResponseEntity<String> getUserByID(@PathVariable int id){
-        ArrayList<User> list = new Database().getUserByID(id);
+        ArrayList<User> list = new DatabaseMySQL().getUserByID(id);
         String json = new Util().getJSON(list);
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
     }
 
     @GetMapping("/user/{pattern}")
     public ResponseEntity<String> getUser(@PathVariable String pattern){
-        ArrayList<User> list = new Database().getUser(pattern);
+        ArrayList<User> list = new DatabaseMySQL().getUser(pattern);
         String json = new Util().getJSON(list);
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
     }
 
     @GetMapping("/")
     public ResponseEntity<String> getOverviewData(){
-        ArrayList<User> list = new Database().getAllUsers();
+        ArrayList<User> list = new DatabaseMySQL().getAllUsers();
         String json = new Util().getOverview(list);
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
     }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import sk.kosickaacademic.simon.Log;
 import sk.kosickaacademic.simon.Login;
 import sk.kosickaacademic.simon.Util;
-import sk.kosickaacademic.simon.database.Database;
+import sk.kosickaacademic.simon.database.DatabaseMySQL;
 import sk.kosickaacademic.simon.entity.User;
 
 import java.util.ArrayList;
@@ -95,12 +95,12 @@ public class SecretController {
         String token = data.substring(7);
         for(Map.Entry<String, String> temp : map.entrySet())
             if(temp.getValue().equals(token)){
-                ArrayList<User> list = new Database().getUserByID(id);
+                ArrayList<User> list = new DatabaseMySQL().getUserByID(id);
                 String json = new Util().getJSON(list);
                 log.printMessage("a");
                 return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
             }
-        ArrayList<User> list = new Database().getAllUsers();
+        ArrayList<User> list = new DatabaseMySQL().getAllUsers();
         String json = new Util().getJSON(list);
         log.printMessage("b");
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);

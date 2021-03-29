@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public class Database {
+public class DatabaseMySQL {
     Log log = new Log();
 
     public Connection getConnection() {
