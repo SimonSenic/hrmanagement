@@ -5,7 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import sk.kosickaacademic.simon.database.DatabaseMongo;
 import sk.kosickaacademic.simon.database.DatabaseMySQL;
+import sk.kosickaacademic.simon.database.SportDatabaseMongo;
 import sk.kosickaacademic.simon.entity.User;
+
+import java.util.ArrayList;
 
 @ComponentScan(basePackages = "sk.kosickaacademic.simon.controller")
 @SpringBootApplication
@@ -25,6 +28,14 @@ public class App
         DatabaseMongo db2 = new DatabaseMongo();
         //db2.insertNewUser(new User(53, "Joe", "Bidden", 0));
         //System.out.println(db2.getAllUsers());
+
+        SportDatabaseMongo db3 = new SportDatabaseMongo();
+        //ArrayList list = new ArrayList<String>();
+        //list.add("Ice Hockey");
+        //list.add("Basketball");
+        //list.add("Golfing");
+        //db3.insertUserData("Janik", list);
+        //db3.deleteUser("Janik");
 
         SpringApplication.run(App.class, args);
     }

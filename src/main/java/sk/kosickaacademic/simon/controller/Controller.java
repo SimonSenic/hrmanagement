@@ -11,6 +11,7 @@ import sk.kosickaacademic.simon.Gender;
 import sk.kosickaacademic.simon.Util;
 import sk.kosickaacademic.simon.database.DatabaseMongo;
 import sk.kosickaacademic.simon.database.DatabaseMySQL;
+import sk.kosickaacademic.simon.database.SportDatabaseMongo;
 import sk.kosickaacademic.simon.entity.User;
 
 import java.util.ArrayList;
@@ -125,5 +126,42 @@ public class Controller {
         ArrayList<User> list = new DatabaseMySQL().getAllUsers();
         String json = new Util().getOverview(list);
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
+    }
+
+    @PostMapping("/sport/user/add")
+    public ResponseEntity<String> insertUserData(@RequestBody String data){
+        try {
+            JSONObject object = (JSONObject) new JSONParser().parse(data);
+            String name = (String) object.get("name");
+            ArrayList<String> sports = (ArrayList<String>) object.get("sports");
+            if(name==null || name.equals("") || sports==null || sports.isEmpty()){
+                JSONObject objError = new JSONObject();
+                objError.put("error", "Invalid entry");
+                return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(objError.toJSONString());
+            }
+            if(new SportDatabaseMongo().insertUserData(name, sports)){
+                JSONObject objMessage = new JSONObject();
+                objMessage.put("server" ,"User added successfully");
+                return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(objMessage.toJSONString());
+            }
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @DeleteMapping("/sport/user/delete")
+    public ResponseEntity<String> deleteUser(@RequestParam(value = "name") String name){
+        if(name==null || name.equals("")){
+            JSONObject objError = new JSONObject();
+            objError.put("error", "Invalid entry");
+            return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(objError.toJSONString());
+        }
+        if(new SportDatabaseMongo().deleteUser(name)){
+            JSONObject objMessage = new JSONObject();
+            objMessage.put("server", "User successfully deleted");
+            return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(objMessage.toJSONString());
+        }
+        return null;
     }
 }
